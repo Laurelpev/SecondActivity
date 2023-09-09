@@ -1,0 +1,6 @@
+<resources>
+    <string name="app_name">GeoQuiz</string>
+<!--    creates the text for the popup-->
+    <string name="true_button">True</string>
+    <string name="false_button">False</string>
+</resources>
