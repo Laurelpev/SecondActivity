@@ -1,6 +1,5 @@
 <?xml version="1.0" encoding="utf-8"?>
-<LinearLayout
-    xmlns:android="http://schemas.android.com/apk/res/android"
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
@@ -14,8 +13,8 @@
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:gravity="center"
-        android:text="@string/question_australia"/>
-<!--        android:text="Canberra is the Capital of Australia" -->
+        android:text="@string/question_australia" />
+    <!--        android:text="Canberra is the Capital of Australia" -->
 
 
     <LinearLayout
@@ -37,10 +36,29 @@
 
     </LinearLayout>
 
-    <Button
-        android:id="@+id/next_button"
+    <LinearLayout
         android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:text="@string/next_button" />
+        android:layout_height="wrap_content">
+
+        <Button
+            android:id="@+id/previous_button"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="@string/previous_button"
+            app:icon="@drawable/ic_baseline_arrow_left_24"
+            app:iconGravity="start"
+            />
+
+
+<!--        on app icon accidentally put . instead of : -->
+        <Button
+            android:id="@+id/next_button"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="@string/next_button"
+            app:icon="@drawable/ic_baseline_arrow_right_24"
+            app:iconGravity="end"
+            />
+    </LinearLayout>
 
 </LinearLayout>

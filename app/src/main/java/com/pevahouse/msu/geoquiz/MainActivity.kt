@@ -12,14 +12,14 @@ import com.pevahouse.msu.geoquiz.databinding.ActivityMainBinding
 
 class MainActivity : AppCompatActivity() {
 
-    private lateinit var binding : ActivityMainBinding
+    private lateinit var binding: ActivityMainBinding
 //    private lateinit var trueButton : Button
 //    private lateinit var falseButton : Button
 
     private val questionBank = listOf(
         //the curse of the comma, had minor issues due to forgetting the comma between questions
-        Question(R.string.question_australia, answer = true) ,
-        Question (R.string.question_oceans, answer = true),
+        Question(R.string.question_australia, answer = true),
+        Question(R.string.question_oceans, answer = true),
         Question(R.string.question_mideast, answer = true),
         Question(R.string.question_africa, answer = true),
         Question(R.string.question_americas, answer = true),
@@ -27,7 +27,6 @@ class MainActivity : AppCompatActivity() {
 
     )
     private var currentIndex = 0
-
 
 
     override fun onCreate(savedInstanceState: Bundle?) {
@@ -39,7 +38,6 @@ class MainActivity : AppCompatActivity() {
         //setting IDs to correlate with buttons
 //        trueButton = findViewById(R.id.true_button)
 //        falseButton = findViewById(R.id.false_button)
-
 
 
         binding.trueButton.setOnClickListener {
@@ -69,6 +67,21 @@ class MainActivity : AppCompatActivity() {
 //            binding.questionTextview.setText(questionTextResId)
             updateQuestion()
         }
+        binding.previousButton.setOnClickListener {
+            currentIndex = (currentIndex - 1) % questionBank.size
+            // used the if statement to attempt to prevent the crashing when previous was hit
+            //on the first question
+            //did not want to loop back around because I feel as if that harms the continuity of the quiz
+            if (currentIndex <= 0) {
+                currentIndex = 0
+            }
+            updateQuestion()
+        }
+
+        binding.questionTextview.setOnClickListener {
+            currentIndex = (currentIndex + 1) % questionBank.size
+            updateQuestion()
+        }
 
 
 
@@ -79,10 +92,10 @@ class MainActivity : AppCompatActivity() {
 //        //decided to swap and look at other things after typing out few times and reviewing resources
 //        //Saw Question had error, looked, i had int not Int, fixed EVERYTHING.
 //        binding.questionTextview.setText(questionTextResId)
-  }
+    }
 
     private fun updateQuestion() {
         val questionTextResId = questionBank[currentIndex].textResId
-           binding.questionTextview.setText(questionTextResId)
+        binding.questionTextview.setText(questionTextResId)
     }
 }
