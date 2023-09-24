@@ -18,8 +18,6 @@ import com.pevahouse.msu.geoquiz.databinding.ActivityMainBinding
 
 private const val TAG = "MainActivity"
 
-//had an error with Activity main binding but once I resynced with gradle it all fixed it
-
 class MainActivity : AppCompatActivity() {
 
     private lateinit var binding: ActivityMainBinding
@@ -36,7 +34,6 @@ class MainActivity : AppCompatActivity() {
     private var currentIndex = 0
     private var scoreCounter = 0
     private var qSize = questionBank.size
-    private var scoreCalc = 0
 
 
     override fun onCreate(savedInstanceState: Bundle?) {
@@ -65,8 +62,6 @@ class MainActivity : AppCompatActivity() {
             snackBar.setTextColor(Color.BLACK)
             snackBar.setBackgroundTint(Color.RED)
             snackBar.show()
-            //well that was more simple than I thought
-            //I dislike the binding aspect, it just does not make sense to me and I dislike not having variables to look towards.
             binding.falseButton.isEnabled = false
             binding.trueButton.isEnabled = false
         }
@@ -78,8 +73,6 @@ class MainActivity : AppCompatActivity() {
             updateQuestion()
 
 
-//            updateQuestion()
-//            finalQuestion()
         }
         binding.previousButton.setOnClickListener {
             currentIndex = (currentIndex - 1) % questionBank.size
@@ -92,19 +85,9 @@ class MainActivity : AppCompatActivity() {
         binding.questionTextview.setOnClickListener {
             currentIndex = (currentIndex + 1) % questionBank.size
             updateQuestion()
-            //this line makes it crash when it runs
-//            btnView.isEnabled = !(btnView.isEnabled)
         }
 
 
-//        these are making the app crash repeatedly
-//       btnView.setOnClickListener {
-//            Toast.makeText(this,"clicked",Toast.LENGTH_SHORT).show()
-//       }
-//
-//        tvMain.setOnClickListener {
-//            btnView.isEnabled = !(btnView.isEnabled)
-//        }
 
 
         updateQuestion()
@@ -117,41 +100,16 @@ class MainActivity : AppCompatActivity() {
         binding.trueButton.isEnabled = true
     }
 
-//    private fun isQuizOver(): Boolean{
-//        return currentIndex >= qSize
-//    }
 private fun finalQuestion() {
-    //bizarre issue??? if i put -1 on it works fine but executes early (obviously) but without it it doesnt run at all
-   //doing +0, -0, -1 +1, nothing else works
-
-    //ok, to be honest, had ChatGPT to help me figure out the indexing that was put into it and figured it out
     if (currentIndex == qSize-1){
         val scoreCalc = (scoreCounter.toDouble() / questionBank.size.toDouble()) * 100
-        val formattedScore = "%.1f".format(scoreCalc) // Format the score as a string with 2 decimal places
+        val formattedScore = "%.1f".format(scoreCalc)
 
-        // Display the formatted score in a Toast
         Toast.makeText(this, formattedScore, Toast.LENGTH_SHORT).show()
         scoreCounter = 0
     }
 }
 
-//    if (currentIndex == questionBank.size - 1) { // Check if it's the last question
-//        // Compute the score as the number of right answers divided by the total number of questions
-//        val scoreCalc = (scoreCounter.toDouble() / questionBank.size.toDouble()) * 100
-//
-//        // Format the score as a string with one decimal place and add "%" to it
-//        val formattedScore = "%.1f %".format(scoreCalc)
-//
-//        // Display the formatted score in a Toast message
-//        Toast.makeText(this, formattedScore, Toast.LENGTH_SHORT).show()
-//
-//        // Reset the score counter to 0 for the next quiz
-//        scoreCounter = 0
-//    }
-
-
-
-//    perhaps these are causing too much stress? No that wasnt it, but still keeping them off
 
 //    override fun onStart(){
 //        super.onStart()
@@ -173,8 +131,7 @@ private fun finalQuestion() {
 //        super.onDestroy()
 //        Log.d(TAG, "onDestroy Called")
 //    }
-//fun onTextChanged(charSequence: CharSequence?, i: Int, i1: Int, i2: Int) {
-//    button.setEnabled(falseButton() || trueButton())
+
 //}
 
 }
