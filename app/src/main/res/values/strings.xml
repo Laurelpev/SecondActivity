@@ -1,5 +1,5 @@
 <resources>
-    <string name="app_name">02_InteractiveUI_GeoQuiz</string>
+    <string name="app_name">03_ActivityLifecycle_GeoQuiz</string>
 <!--    creates the text for the popup-->
     <string name="true_button">True</string>
     <string name="false_button">False</string>

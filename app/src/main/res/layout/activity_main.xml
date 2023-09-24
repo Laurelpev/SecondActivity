@@ -13,8 +13,8 @@
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:gravity="center"
-        android:text="@string/question_australia" />
-    <!--        android:text="Canberra is the Capital of Australia" -->
+        android:text="@string/question_australia"
+        />
 
 
     <LinearLayout
@@ -50,7 +50,6 @@
             />
 
 
-<!--        on app icon accidentally put . instead of : -->
         <Button
             android:id="@+id/next_button"
             android:layout_width="wrap_content"
