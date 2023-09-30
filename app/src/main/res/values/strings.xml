@@ -1,5 +1,5 @@
 <resources>
-    <string name="app_name">03_ActivityLifecycle_GeoQuiz</string>
+    <string name="app_name">04_PersistingUiState_GeoQuiz</string>
 <!--    creates the text for the popup-->
     <string name="true_button">True</string>
     <string name="false_button">False</string>
@@ -11,5 +11,8 @@
     <string name="question_africa">The source of the Nile River is in Egypt</string>
     <string name="question_americas"> The Amazon River is the Longest river in the Americas</string>
     <string name="question_asia"> Lake Baikal is the world\'s oldest and deepest freshwater lake.</string>
+
+    <string name="correct_toast"> Correct!</string>
+    <string name="incorrect_toast"> Incorrect.</string>
 
 </resources>

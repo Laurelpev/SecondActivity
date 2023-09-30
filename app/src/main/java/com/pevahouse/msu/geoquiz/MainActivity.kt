@@ -3,11 +3,13 @@ package com.pevahouse.msu.geoquiz
 //import android.R.attr.button
 import android.graphics.Color
 import android.os.Bundle
+import android.util.Log
 //import android.text.BoringLayout.make
 //import android.view.View
 //import android.widget.Button
 //import android.widget.TextView
 import android.widget.Toast
+import androidx.activity.viewModels
 import androidx.appcompat.app.AppCompatActivity
 import com.google.android.material.snackbar.Snackbar
 import com.pevahouse.msu.geoquiz.databinding.ActivityMainBinding
@@ -21,8 +23,9 @@ private const val TAG = "MainActivity"
 class MainActivity : AppCompatActivity() {
 
     private lateinit var binding: ActivityMainBinding
+    private val quizViewModel:QuizViewModel by viewModels()
 
-    private val questionBank = listOf(
+    /*private val questionBank = listOf(
         Question(R.string.question_australia, answer = true),
         Question(R.string.question_oceans, answer = true),
         Question(R.string.question_mideast, answer = true),
@@ -30,10 +33,10 @@ class MainActivity : AppCompatActivity() {
         Question(R.string.question_americas, answer = true),
         Question(R.string.question_asia, answer = true)
 
-    )
+    )*/
     private var currentIndex = 0
     private var scoreCounter = 0
-    private var qSize = questionBank.size
+    //I had instantiated a variable for quiz size here calling from the view model, littl to say did not like it
 
 
     override fun onCreate(savedInstanceState: Bundle?) {
@@ -41,27 +44,25 @@ class MainActivity : AppCompatActivity() {
 //        Log.d(TAG, "onCreate (Bundle?) called")
         binding = ActivityMainBinding.inflate(layoutInflater)
         setContentView(binding.root)
+        Log.d(TAG, "Got a QuizViewModel:$quizViewModel")
 
         binding.trueButton.setOnClickListener {
-            val snackBar = Snackbar.make(
-                it,
-                "Correct",
-                Snackbar.LENGTH_LONG
-            )
-            snackBar.show()
-            scoreCounter += 1
+
+            checkAnswer(true    )
+//            scoreCounter += 1
             binding.trueButton.isEnabled = false
             binding.falseButton.isEnabled = false
         }
         binding.falseButton.setOnClickListener {
-            val snackBar = Snackbar.make(
-                it,
-                "Incorrect",
-                Snackbar.LENGTH_LONG
-            )
-            snackBar.setTextColor(Color.BLACK)
-            snackBar.setBackgroundTint(Color.RED)
-            snackBar.show()
+//            val snackBar = Snackbar.make(
+//                it,
+//                "Incorrect",
+//                Snackbar.LENGTH_LONG
+//            )
+//            snackBar.setTextColor(Color.BLACK)
+//            snackBar.setBackgroundTint(Color.RED)
+//            snackBar.show()
+            checkAnswer(false)
             binding.falseButton.isEnabled = false
             binding.trueButton.isEnabled = false
         }
@@ -69,21 +70,23 @@ class MainActivity : AppCompatActivity() {
 
         binding.nextButton.setOnClickListener {
             finalQuestion()
-            currentIndex = (currentIndex + 1) % questionBank.size
+//            currentIndex = (currentIndex + 1) % questionBank.size
+            quizViewModel.moveToNext()
+            currentIndex =+ 1
+
             updateQuestion()
 
 
         }
         binding.previousButton.setOnClickListener {
-            currentIndex = (currentIndex - 1) % questionBank.size
-            if (currentIndex <= 0) {
-                currentIndex = 0
-            }
+            quizViewModel.moveToLast()
+            currentIndex -= 1
             updateQuestion()
         }
 
         binding.questionTextview.setOnClickListener {
-            currentIndex = (currentIndex + 1) % questionBank.size
+            quizViewModel.moveToNext()
+            currentIndex =+ 1
             updateQuestion()
         }
 
@@ -94,15 +97,32 @@ class MainActivity : AppCompatActivity() {
     }
 
     private fun updateQuestion() {
-        val questionTextResId = questionBank[currentIndex].textResId
+//        val questionTextResId = questionBank[currentIndex].textResId
+        val questionTextResId = quizViewModel.currentQuestionText
+
         binding.questionTextview.setText(questionTextResId)
         binding.falseButton.isEnabled = true
         binding.trueButton.isEnabled = true
     }
 
+//at some poitn did not add this functionality
+    private fun checkAnswer(userAnswer:Boolean){
+//        val correctAnswer = questionBank[currentIndex].answer
+    val correctAnswer = quizViewModel.currentQuestionAnswer
+
+    val messageResId = if (userAnswer == correctAnswer){
+            scoreCounter += 1
+            R.string.correct_toast
+
+        } else {
+            R.string.incorrect_toast
+        }
+        Toast.makeText(this, messageResId, Toast.LENGTH_LONG).show()
+    }
+
 private fun finalQuestion() {
-    if (currentIndex == qSize-1){
-        val scoreCalc = (scoreCounter.toDouble() / questionBank.size.toDouble()) * 100
+    if (quizViewModel.currentQuestionIndex == quizViewModel.currentQuestionBankSize - 1){
+        val scoreCalc = (scoreCounter.toDouble() / quizViewModel.currentQuestionBankSize.toDouble()) * 100
         val formattedScore = "%.1f".format(scoreCalc)
 
         Toast.makeText(this, formattedScore, Toast.LENGTH_SHORT).show()
