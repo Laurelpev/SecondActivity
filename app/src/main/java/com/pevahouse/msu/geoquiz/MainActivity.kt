@@ -1,6 +1,7 @@
 package com.pevahouse.msu.geoquiz
 
 //import android.R.attr.button
+import android.app.Activity
 import android.content.Intent
 import android.graphics.Color
 import android.os.Bundle
@@ -10,6 +11,7 @@ import android.util.Log
 //import android.widget.Button
 //import android.widget.TextView
 import android.widget.Toast
+import androidx.activity.result.contract.ActivityResultContracts
 import androidx.activity.viewModels
 import androidx.appcompat.app.AppCompatActivity
 import com.google.android.material.snackbar.Snackbar
@@ -25,6 +27,16 @@ class MainActivity : AppCompatActivity() {
 
     private lateinit var binding: ActivityMainBinding
     private val quizViewModel:QuizViewModel by viewModels()
+    private  val cheatLauncher = registerForActivityResult(
+        ActivityResultContracts.StartActivityForResult()
+    )
+    { result ->
+        //handle result
+        if (result.resultCode== Activity.RESULT_OK){
+            quizViewModel.isCheater =
+                result.data?.getBooleanExtra(EXTRA_ANSWER_SHOWN, false) ?: false
+        }
+    }
 
     private var currentIndex = 0
     private var scoreCounter = 0
@@ -44,8 +56,11 @@ class MainActivity : AppCompatActivity() {
         }
         binding.cheatButton.setOnClickListener {
             //START ACTIVITY
-            val intent = Intent(this, CheatActivity::class.java)
-            startActivity(intent)
+//            val intent = Intent(this, CheatActivity::class.java)java
+            val answerIsTrue = quizViewModel.currentQuestionAnswer
+            val intent = CheatActivity.newIntent(this@MainActivity, answerIsTrue)
+//            startActivity(intent)
+            cheatLauncher.launch(intent)
         }
         binding.trueButton.setOnClickListener {
 
@@ -99,13 +114,22 @@ class MainActivity : AppCompatActivity() {
     private fun checkAnswer(userAnswer:Boolean){
     val correctAnswer = quizViewModel.currentQuestionAnswer
 
-    val messageResId = if (userAnswer == correctAnswer){
-            scoreCounter += 1
-            R.string.correct_toast
-
-        } else {
-            R.string.incorrect_toast
+//    val messageResId = if (userAnswer == correctAnswer){
+//            scoreCounter += 1
+//            R.string.correct_toast
+//
+//        } else {
+//            R.string.incorrect_toast
+//        }
+//        Toast.makeText(this, messageResId, Toast.LENGTH_LONG).show()
+//
+        val messageResId = when {
+            quizViewModel.isCheater -> R.string.judgement_toast
+            userAnswer == correctAnswer -> R.string.correct_toast
+            else -> R.string.incorrect_toast
         }
+        Toast.makeText(this, messageResId, Toast.LENGTH_SHORT).show()
+//left off this thing below and it would only show the correct toast
         Toast.makeText(this, messageResId, Toast.LENGTH_LONG).show()
     }
 
