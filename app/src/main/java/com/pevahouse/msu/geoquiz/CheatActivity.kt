@@ -8,6 +8,7 @@ import android.os.Bundle
 import android.view.inputmethod.ExtractedTextRequest
 import android.widget.Toast
 import androidx.activity.viewModels
+import com.pevahouse.msu.geoquiz.QuizViewModel
 import com.pevahouse.msu.geoquiz.databinding.ActivityCheatBinding
 const val EXTRA_ANSWER_SHOWN = "com.pevahouse.msu.geoquiz.answer_shown"
 private const val EXTRA_ANSWER_IS_TRUE =
@@ -17,7 +18,9 @@ class CheatActivity : AppCompatActivity() {
     private lateinit var binding: ActivityCheatBinding
 
     private var answerIsTrue = false;
+
     private val cheatViewModel: CheatViewModel by viewModels()
+    private val QuizViewModel: QuizViewModel by viewModels()
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -32,7 +35,8 @@ class CheatActivity : AppCompatActivity() {
                 else -> R.string.false_button
             }
             binding.answerTextView.setText(answerText)
-            cheatViewModel.isAnswerShown = true // Save the state
+            cheatViewModel.isAnswerShown = true
+            QuizViewModel.setCheatedForCurrentQuestion(true) // Correct way to set cheated for the current question
             setAnswerShownResult(true)
         }
         if (cheatViewModel.isAnswerShown) {

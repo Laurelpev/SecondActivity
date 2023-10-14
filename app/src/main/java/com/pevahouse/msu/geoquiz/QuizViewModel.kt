@@ -31,15 +31,13 @@ class QuizViewModel(private val savedStateHandle:SavedStateHandle):ViewModel() {
         Question(R.string.question_asia, answer = true)
     )
 
-    var isCheater: Boolean
-        get() = savedStateHandle.get(IS_CHEATER_KEY) ?: false
-        set(value) = savedStateHandle.set(IS_CHEATER_KEY, value)
+    private val cheatedQuestions = MutableList(questionBank.size) { false }
 
-
-    private var currentIndex:Int
-        get() = savedStateHandle.get(CURRENT_INDEX_KEY)?: 0
-        set(value) = savedStateHandle.set(CURRENT_INDEX_KEY, value)
-
+    var currentIndex: Int
+        get() = savedStateHandle.get(CURRENT_INDEX_KEY) ?: 0
+        set(value) {
+            savedStateHandle.set(CURRENT_INDEX_KEY, value)
+        }
 
     val currentQuestionAnswer: Boolean
         get() = questionBank[currentIndex].answer
@@ -50,26 +48,28 @@ class QuizViewModel(private val savedStateHandle:SavedStateHandle):ViewModel() {
     val currentQuestionIndex: Int
         get() = currentIndex
 
-    val currentQuestionBankSize
+    val currentQuestionBankSize: Int
         get() = questionBank.size
 
-    fun moveToNext(){
-        currentIndex= (currentIndex + 1) % questionBank.size
-
+    fun moveToNext() {
+        currentIndex = (currentIndex + 1) % questionBank.size
     }
-    fun moveToLast(){
-        currentIndex = (currentIndex - 1) % questionBank.size
-        if (currentIndex <= 0) {
-            currentIndex = 0
+
+    fun moveToLast() {
+        currentIndex = (currentIndex - 1 + questionBank.size) % questionBank.size
+    }
+
+    fun isCheaterForCurrentQuestion(): Boolean {
+        return cheatedQuestions[currentIndex]
+    }
+    var isCheater: Boolean
+        get() = cheatedQuestions[currentIndex]
+        set(value) {
+            cheatedQuestions[currentIndex] = value
         }
 
-    }
-    companion object {
-        // You don't need these constants in the ViewModel; they are related to the activity.
-        // You can keep them in your MainActivity.
-         private const val TAG = "MainActivity"
-         const val CURRENT_INDEX_KEY = "CURRENT"
-         const val IS_CHEATER_KEY = "IS_CHEATER_KEY"
+    fun setCheatedForCurrentQuestion(cheated: Boolean) {
+        cheatedQuestions[currentIndex] = cheated
     }
 }
 class CheatViewModel(private val savedStateHandle: SavedStateHandle) : ViewModel() {

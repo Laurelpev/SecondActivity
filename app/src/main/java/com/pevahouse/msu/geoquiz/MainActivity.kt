@@ -62,17 +62,36 @@ class MainActivity : AppCompatActivity() {
 //            startActivity(intent)
             cheatLauncher.launch(intent)
         }
+//        binding.trueButton.setOnClickListener {
+//
+//            checkAnswer(true    )
+//            binding.trueButton.isEnabled = false
+//            binding.falseButton.isEnabled = false
+//        }
+//        binding.falseButton.setOnClickListener {
+//
+//            checkAnswer(false)
+//            binding.falseButton.isEnabled = false
+//            binding.trueButton.isEnabled = false
+//        }
         binding.trueButton.setOnClickListener {
-
-            checkAnswer(true    )
-            binding.trueButton.isEnabled = false
-            binding.falseButton.isEnabled = false
+            if (!quizViewModel.isCheaterForCurrentQuestion()) {
+                checkAnswer(true)
+                quizViewModel.setCheatedForCurrentQuestion(false)
+            } else {
+                showJudgmentToast()
+            }
+            disableAnswerButtons()
         }
-        binding.falseButton.setOnClickListener {
 
-            checkAnswer(false)
-            binding.falseButton.isEnabled = false
-            binding.trueButton.isEnabled = false
+        binding.falseButton.setOnClickListener {
+            if (!quizViewModel.isCheaterForCurrentQuestion()) {
+                checkAnswer(false)
+                quizViewModel.setCheatedForCurrentQuestion(false)
+            } else {
+                showJudgmentToast()
+            }
+            disableAnswerButtons()
         }
 
 
@@ -102,7 +121,14 @@ class MainActivity : AppCompatActivity() {
 
         updateQuestion()
     }
+    private fun showJudgmentToast() {
+        Toast.makeText(this, R.string.judgement_toast, Toast.LENGTH_SHORT).show()
+    }
 
+    private fun disableAnswerButtons() {
+        binding.falseButton.isEnabled = false
+        binding.trueButton.isEnabled = false
+    }
     private fun updateQuestion() {
         val questionTextResId = quizViewModel.currentQuestionText
 
