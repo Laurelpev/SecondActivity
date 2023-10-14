@@ -1,6 +1,8 @@
 package com.pevahouse.msu.geoquiz
 import android.util.Log
 import android.widget.Toast
+import androidx.lifecycle.LiveData
+import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.SavedStateHandle
 import androidx.lifecycle.ViewModel
 private const val TAG = "QuizViewModel"
@@ -19,7 +21,7 @@ class QuizViewModel(private val savedStateHandle:SavedStateHandle):ViewModel() {
         Log.d(TAG, "QuizViewModel instance about to be destroyed")
     }*/
 
-//realized I had these just all set as true
+    //realized I had these just all set as true
     private val questionBank = listOf(
         Question(R.string.question_australia, answer = true),
         Question(R.string.question_oceans, answer = true),
@@ -30,26 +32,26 @@ class QuizViewModel(private val savedStateHandle:SavedStateHandle):ViewModel() {
     )
 
     var isCheater: Boolean
-    get() = savedStateHandle.get(IS_CHEATER_KEY) ?: false
-    set(value) = savedStateHandle.set(IS_CHEATER_KEY, value)
+        get() = savedStateHandle.get(IS_CHEATER_KEY) ?: false
+        set(value) = savedStateHandle.set(IS_CHEATER_KEY, value)
 
 
     private var currentIndex:Int
-    get() = savedStateHandle.get(CURRENT_INDEX_KEY)?: 0
-    set(value) = savedStateHandle.set(CURRENT_INDEX_KEY, value)
+        get() = savedStateHandle.get(CURRENT_INDEX_KEY)?: 0
+        set(value) = savedStateHandle.set(CURRENT_INDEX_KEY, value)
 
 
     val currentQuestionAnswer: Boolean
-    get() = questionBank[currentIndex].answer
+        get() = questionBank[currentIndex].answer
 
     val currentQuestionText: Int
-    get() = questionBank[currentIndex].textResId
+        get() = questionBank[currentIndex].textResId
 
     val currentQuestionIndex: Int
         get() = currentIndex
 
     val currentQuestionBankSize
-    get() = questionBank.size
+        get() = questionBank.size
 
     fun moveToNext(){
         currentIndex= (currentIndex + 1) % questionBank.size
@@ -61,5 +63,21 @@ class QuizViewModel(private val savedStateHandle:SavedStateHandle):ViewModel() {
             currentIndex = 0
         }
 
+    }
+    companion object {
+        // You don't need these constants in the ViewModel; they are related to the activity.
+        // You can keep them in your MainActivity.
+         private const val TAG = "MainActivity"
+         const val CURRENT_INDEX_KEY = "CURRENT"
+         const val IS_CHEATER_KEY = "IS_CHEATER_KEY"
+    }
+}
+class CheatViewModel(private val savedStateHandle: SavedStateHandle) : ViewModel() {
+    var isAnswerShown: Boolean
+        get() = savedStateHandle.get(IS_ANSWER_SHOWN_KEY) ?: false
+        set(value) = savedStateHandle.set(IS_ANSWER_SHOWN_KEY, value)
+
+    companion object {
+        private const val IS_ANSWER_SHOWN_KEY = "IS_ANSWER_SHOWN"
     }
 }

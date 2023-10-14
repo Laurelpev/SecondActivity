@@ -6,6 +6,8 @@ import android.content.Intent
 import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
 import android.view.inputmethod.ExtractedTextRequest
+import android.widget.Toast
+import androidx.activity.viewModels
 import com.pevahouse.msu.geoquiz.databinding.ActivityCheatBinding
 const val EXTRA_ANSWER_SHOWN = "com.pevahouse.msu.geoquiz.answer_shown"
 private const val EXTRA_ANSWER_IS_TRUE =
@@ -15,6 +17,7 @@ class CheatActivity : AppCompatActivity() {
     private lateinit var binding: ActivityCheatBinding
 
     private var answerIsTrue = false;
+    private val cheatViewModel: CheatViewModel by viewModels()
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -29,7 +32,21 @@ class CheatActivity : AppCompatActivity() {
                 else -> R.string.false_button
             }
             binding.answerTextView.setText(answerText)
+            cheatViewModel.isAnswerShown = true // Save the state
             setAnswerShownResult(true)
+        }
+        if (cheatViewModel.isAnswerShown) {
+            showAnswer()
+        } else {
+            binding.showAnswerButton.setOnClickListener {
+                val answerText = when {
+                    answerIsTrue -> R.string.true_button
+                    else -> R.string.false_button
+                }
+                binding.answerTextView.setText(answerText)
+                cheatViewModel.isAnswerShown = true // Save the state
+                setAnswerShownResult(true)
+            }
         }
     }
     private fun setAnswerShownResult(isAnswerShown: Boolean){
@@ -44,5 +61,13 @@ class CheatActivity : AppCompatActivity() {
                 putExtra(EXTRA_ANSWER_IS_TRUE, answerIsTrue)
             }
         }
+    }
+    private fun showAnswer() {
+        val answerText = when {
+            answerIsTrue -> R.string.true_button
+            else -> R.string.false_button
+        }
+        binding.answerTextView.setText(answerText)
+        setAnswerShownResult(true)
     }
 }

@@ -112,7 +112,7 @@ class MainActivity : AppCompatActivity() {
     }
 
     private fun checkAnswer(userAnswer:Boolean){
-    val correctAnswer = quizViewModel.currentQuestionAnswer
+        val correctAnswer = quizViewModel.currentQuestionAnswer
 
 //    val messageResId = if (userAnswer == correctAnswer){
 //            scoreCounter += 1
@@ -130,18 +130,20 @@ class MainActivity : AppCompatActivity() {
         }
         Toast.makeText(this, messageResId, Toast.LENGTH_SHORT).show()
 //left off this thing below and it would only show the correct toast
-        Toast.makeText(this, messageResId, Toast.LENGTH_LONG).show()
+//        Toast.makeText(this, messageResId, Toast.LENGTH_LONG).show()
+        if (userAnswer == correctAnswer) {
+            Toast.makeText(this, R.string.correct_toast, Toast.LENGTH_SHORT).show()
+        }
     }
+    private fun finalQuestion() {
+        if (quizViewModel.currentQuestionIndex == quizViewModel.currentQuestionBankSize - 1){
+            val scoreCalc = (scoreCounter.toDouble() / quizViewModel.currentQuestionBankSize.toDouble()) * 100
+            val formattedScore = "%.1f".format(scoreCalc)
 
-private fun finalQuestion() {
-    if (quizViewModel.currentQuestionIndex == quizViewModel.currentQuestionBankSize - 1){
-        val scoreCalc = (scoreCounter.toDouble() / quizViewModel.currentQuestionBankSize.toDouble()) * 100
-        val formattedScore = "%.1f".format(scoreCalc)
-
-        Toast.makeText(this, formattedScore, Toast.LENGTH_SHORT).show()
-        scoreCounter = 0
+            Toast.makeText(this, formattedScore, Toast.LENGTH_SHORT).show()
+            scoreCounter = 0
+        }
     }
-}
 
 
 //    override fun onStart(){
