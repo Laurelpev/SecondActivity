@@ -1,6 +1,7 @@
 package com.pevahouse.msu.geoquiz
 
 //import android.R.attr.button
+import android.content.Intent
 import android.graphics.Color
 import android.os.Bundle
 import android.util.Log
@@ -25,43 +26,35 @@ class MainActivity : AppCompatActivity() {
     private lateinit var binding: ActivityMainBinding
     private val quizViewModel:QuizViewModel by viewModels()
 
-    /*private val questionBank = listOf(
-        Question(R.string.question_australia, answer = true),
-        Question(R.string.question_oceans, answer = true),
-        Question(R.string.question_mideast, answer = true),
-        Question(R.string.question_africa, answer = true),
-        Question(R.string.question_americas, answer = true),
-        Question(R.string.question_asia, answer = true)
-
-    )*/
     private var currentIndex = 0
     private var scoreCounter = 0
-    //I had instantiated a variable for quiz size here calling from the view model, littl to say did not like it
 
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
-//        Log.d(TAG, "onCreate (Bundle?) called")
         binding = ActivityMainBinding.inflate(layoutInflater)
         setContentView(binding.root)
         Log.d(TAG, "Got a QuizViewModel:$quizViewModel")
 
+
+        binding.cheatButton.setOnClickListener {
+
+            quizViewModel.moveToNext()
+            updateQuestion()
+        }
+        binding.cheatButton.setOnClickListener {
+            //START ACTIVITY
+            val intent = Intent(this, CheatActivity::class.java)
+            startActivity(intent)
+        }
         binding.trueButton.setOnClickListener {
 
             checkAnswer(true    )
-//            scoreCounter += 1
             binding.trueButton.isEnabled = false
             binding.falseButton.isEnabled = false
         }
         binding.falseButton.setOnClickListener {
-//            val snackBar = Snackbar.make(
-//                it,
-//                "Incorrect",
-//                Snackbar.LENGTH_LONG
-//            )
-//            snackBar.setTextColor(Color.BLACK)
-//            snackBar.setBackgroundTint(Color.RED)
-//            snackBar.show()
+
             checkAnswer(false)
             binding.falseButton.isEnabled = false
             binding.trueButton.isEnabled = false
@@ -70,7 +63,6 @@ class MainActivity : AppCompatActivity() {
 
         binding.nextButton.setOnClickListener {
             finalQuestion()
-//            currentIndex = (currentIndex + 1) % questionBank.size
             quizViewModel.moveToNext()
             currentIndex =+ 1
 
@@ -97,7 +89,6 @@ class MainActivity : AppCompatActivity() {
     }
 
     private fun updateQuestion() {
-//        val questionTextResId = questionBank[currentIndex].textResId
         val questionTextResId = quizViewModel.currentQuestionText
 
         binding.questionTextview.setText(questionTextResId)
@@ -105,9 +96,7 @@ class MainActivity : AppCompatActivity() {
         binding.trueButton.isEnabled = true
     }
 
-//at some poitn did not add this functionality
     private fun checkAnswer(userAnswer:Boolean){
-//        val correctAnswer = questionBank[currentIndex].answer
     val correctAnswer = quizViewModel.currentQuestionAnswer
 
     val messageResId = if (userAnswer == correctAnswer){

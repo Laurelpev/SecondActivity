@@ -1,6 +1,6 @@
 <resources>
-    <string name="app_name">04_PersistingUiState_GeoQuiz</string>
-<!--    creates the text for the popup-->
+    <string name="app_name">05_SecondActivity</string>
+    <!--    creates the text for the popup-->
     <string name="true_button">True</string>
     <string name="false_button">False</string>
     <string name="question_australia"> Canberra is the capital of Australia</string>
@@ -15,4 +15,8 @@
     <string name="correct_toast"> Correct!</string>
     <string name="incorrect_toast"> Incorrect.</string>
 
+    <string name="warning_text"> Are you sure you want to do this?</string>
+    <string name="short_answer_button"> Show Answer</string>
+    <string name="cheat_button"> Cheat!</string>
+    <string name="judgement_toast"> Cheating is wrong. </string>
 </resources>
